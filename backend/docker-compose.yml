@@ -1,0 +1,47 @@
+version: '3'
+services:
+  kp45-mysql:
+    container_name: kp45-mysql
+    image: mysql/mysql-server:5.7
+    environment:
+      MYSQL_DATABASE: kp45
+      MYSQL_ROOT_PASSWORD: "123456"
+      MYSQL_ROOT_HOST: "%"
+    ports:
+      - 3306:3306
+    restart: always
+  kp45-openresty:
+    container_name: kp45-openresty
+    image: openresty/openresty
+    ports:
+      - 443:443
+    environment:
+      - .nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf
+      - cert.pem:/usr/local/openresty/nginx/conf/cert.pem
+      - cert.key:/usr/local/openresty/nginx/conf/cert.key
+    restart: always
+  kp45-hello:
+    container_name: kp45-hello
+    image: kevinpan45/kp45-hello:latest
+    ports:
+      - 80:80
+    depends_on:
+      - kp45-mysql
+      - kp45-openresty
+  kp45-es:
+    image: elasticsearch:latest
+    container_name: kp45-es
+    networks:
+      docker-kp45:
+  kp45-kibana:
+    image: kibana:latest
+    container_name: kp45-kibana
+    environment:
+      - "ELASTICSEARCH_URL=http://kp45-es:9200"
+    networks:
+      - docker-kp45
+    depends_on:
+      - kp45-es
+networks:
+  docker-kp45:
+    driver: bridge
