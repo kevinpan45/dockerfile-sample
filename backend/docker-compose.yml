@@ -35,17 +35,20 @@ services:
       - kp45-mysql
       - kp45-openresty
   kp45-es:
-    image: elasticsearch:latest
+    image: elasticsearch:7.4.2
     container_name: kp45-es
+    environment:
+      discovery.type: single-node
     ports: 
       - 9200:9200
     networks:
       docker-kp45:
   kp45-kibana:
-    image: kibana:latest
+    image: kibana:7.4.2
     container_name: kp45-kibana
     environment:
-      - "ELASTICSEARCH_URL=http://kp45-es:9200"
+      SERVER_NAME: kp45-es
+      ELASTICSEARCH_HOSTS: http://kp45-es:9200
     ports: 
       - 5601:5601
     networks:
