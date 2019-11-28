@@ -9,12 +9,16 @@ services:
       MYSQL_ROOT_HOST: "%"
     ports:
       - 3306:3306
+    networks:
+      - docker-kp45
     restart: always
   kp45-openresty:
     container_name: kp45-openresty
     image: openresty/openresty
     ports:
       - 443:443
+    networks:
+      - docker-kp45
     environment:
       - .nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf
       - cert.pem:/usr/local/openresty/nginx/conf/cert.pem
@@ -25,12 +29,16 @@ services:
     image: kevinpan45/kp45-hello:latest
     ports:
       - 80:80
+    networks:
+      - docker-kp45
     depends_on:
       - kp45-mysql
       - kp45-openresty
   kp45-es:
     image: elasticsearch:latest
     container_name: kp45-es
+    ports: 
+      - 9200:9200
     networks:
       docker-kp45:
   kp45-kibana:
@@ -38,6 +46,8 @@ services:
     container_name: kp45-kibana
     environment:
       - "ELASTICSEARCH_URL=http://kp45-es:9200"
+    ports: 
+      - 5601:5601
     networks:
       - docker-kp45
     depends_on:
