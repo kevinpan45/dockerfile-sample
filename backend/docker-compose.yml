@@ -11,7 +11,7 @@ services:
       - 3306:3306
     networks:
       - docker-kp45
-    restart: always
+    # restart: always
   kp45-openresty:
     container_name: kp45-openresty
     image: openresty/openresty
@@ -23,7 +23,7 @@ services:
       - .nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf
       - cert.pem:/usr/local/openresty/nginx/conf/cert.pem
       - cert.key:/usr/local/openresty/nginx/conf/cert.key
-    restart: always
+    # restart: always
   kp45-hello:
     container_name: kp45-hello
     image: kevinpan45/kp45-hello:latest
