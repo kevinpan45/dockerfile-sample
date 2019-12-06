@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 services:
   kp45-mysql:
     container_name: kp45-mysql
@@ -24,6 +24,24 @@ services:
       - cert.pem:/usr/local/openresty/nginx/conf/cert.pem
       - cert.key:/usr/local/openresty/nginx/conf/cert.key
     # restart: always
+  kp45-orange:
+    container_name: kp45-orange
+    image: syhily/orange
+    ports:
+      - 7777:7777
+      - 8888:80
+      - 9999:9999
+    environment:
+      ORANGE_DATABASE: orange
+      ORANGE_HOST: kp45-mysql
+      ORANGE_PORT: 3306
+      ORANGE_USER: root
+      ORANGE_PWD: 123456
+    depends_on:
+      - kp45-mysql
+      - kp45-openresty
+    networks:
+      - docker-kp45
   kp45-hello:
     container_name: kp45-hello
     image: kevinpan45/kp45-hello:latest
@@ -39,17 +57,17 @@ services:
     container_name: kp45-es
     environment:
       discovery.type: single-node
-    ports: 
+    ports:
       - 9200:9200
     networks:
-      docker-kp45:
+      - docker-kp45
   kp45-kibana:
     image: kibana:7.4.2
     container_name: kp45-kibana
     environment:
       SERVER_NAME: kp45-es
       ELASTICSEARCH_HOSTS: http://kp45-es:9200
-    ports: 
+    ports:
       - 5601:5601
     networks:
       - docker-kp45
