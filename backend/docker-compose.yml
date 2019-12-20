@@ -11,19 +11,13 @@ services:
       - 3306:3306
     networks:
       - docker-kp45
-    # restart: always
-  kp45-openresty:
-    container_name: kp45-openresty
-    image: openresty/openresty
+  kp45-redis:
+    container_name: kp45-redis
+    image: redis
     ports:
-      - 443:443
+      - 6379:6379
     networks:
       - docker-kp45
-    environment:
-      - .nginx.conf:/usr/local/openresty/nginx/conf/nginx.conf
-      - cert.pem:/usr/local/openresty/nginx/conf/cert.pem
-      - cert.key:/usr/local/openresty/nginx/conf/cert.key
-    # restart: always
   kp45-orange:
     container_name: kp45-orange
     image: syhily/orange
@@ -39,7 +33,6 @@ services:
       ORANGE_PWD: 123456
     depends_on:
       - kp45-mysql
-      - kp45-openresty
     networks:
       - docker-kp45
   kp45-hello:
@@ -51,7 +44,7 @@ services:
       - docker-kp45
     depends_on:
       - kp45-mysql
-      - kp45-openresty
+      - kp45-redis
   kp45-es:
     image: elasticsearch:7.4.2
     container_name: kp45-es
