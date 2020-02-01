@@ -45,6 +45,7 @@ services:
     depends_on:
       - kp45-mysql
       - kp45-redis
+    restart: always
   kp45-es:
     image: elasticsearch:7.4.2
     container_name: kp45-es
