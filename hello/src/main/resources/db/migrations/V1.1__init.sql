@@ -1,0 +1,1 @@
+INSERT INTO hello VALUES(1, "hello");
