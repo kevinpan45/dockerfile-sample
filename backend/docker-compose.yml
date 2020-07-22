@@ -18,33 +18,24 @@ services:
       - 6379:6379
     networks:
       - docker-kp45
-  kp45-orange:
-    container_name: kp45-orange
-    image: syhily/orange
-    ports:
-      - 7777:7777
-      - 8888:80
-      - 9999:9999
-    environment:
-      ORANGE_DATABASE: orange
-      ORANGE_HOST: kp45-mysql
-      ORANGE_PORT: 3306
-      ORANGE_USER: root
-      ORANGE_PWD: 123456
-    depends_on:
-      - kp45-mysql
-    networks:
-      - docker-kp45
   kp45-hello:
     container_name: kp45-hello
     image: kevinpan45/kp45-hello:latest
     ports:
-      - 80:80
+      - 20080:80
     networks:
       - docker-kp45
     depends_on:
       - kp45-mysql
       - kp45-redis
+    restart: always
+  kp45-openresty:
+    container_name: kp45-openresty
+    image: kevinpan45/kp45-openresty
+    ports: 
+      - 443:443
+    networks: 
+      - docker-kp45
     restart: always
   kp45-es:
     image: elasticsearch:7.4.2
