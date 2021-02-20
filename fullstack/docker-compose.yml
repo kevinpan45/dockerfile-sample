@@ -1,0 +1,81 @@
+version: "3"
+services:
+  kp45-mysql:
+    container_name: kp45-mysql
+    image: mysql/mysql-server:5.7
+    environment:
+      MYSQL_DATABASE: kp45
+      MYSQL_ROOT_PASSWORD: "123456"
+      MYSQL_ROOT_HOST: "%"
+    ports:
+      - 3306:3306
+    networks:
+      - docker-kp45
+    volumes:
+        - /data/kp45/project/mysql
+  kp45-redis:
+    container_name: kp45-redis
+    image: redis
+    ports:
+      - 6379:6379
+    networks:
+      - docker-kp45
+  kp45-kafka:
+    container_name: kp45-kafka
+    image: wurstmeister/kafka
+    restart: always
+    environment: 
+      KAFKA_LISTENERS: PLAINTEXT://:9092
+      KAFKA_ZOOKEEPER_CONNECT: localhost:2181
+      KAFKA_LOG_DIRS: /kafka/data/
+      KAFKA_MESSAGE_MAX_BYTES: 41943040
+      KAFKA_REPLICA_FETCH_MAX_BYTES: 41943040
+  kp45-zookeeper:
+    container_name: kp45-zookeeper
+    image: zookeeper
+    restart: always
+    volumes:
+        - /data/kp45/project/zookeeper/data/:/data/
+  kp45-minio:
+    container_name: kp45-minio
+    image: minio/minio
+    ports:
+        - 9000:9000
+    environment:
+      MINIO_ACCESS_KEY: admin
+      MINIO_SECRET_KEY: 123456
+  kp45-hello:
+    container_name: kp45-hello
+    image: kevinpan45/kp45-hello:latest
+    ports:
+      - 20080:80
+    networks:
+      - docker-kp45
+    depends_on:
+      - kp45-mysql
+      - kp45-redis
+    restart: always
+  kp45-es:
+    image: elasticsearch:7.4.2
+    container_name: kp45-es
+    environment:
+      discovery.type: single-node
+    ports:
+      - 9200:9200
+    networks:
+      - docker-kp45
+  kp45-kibana:
+    image: kibana:7.4.2
+    container_name: kp45-kibana
+    environment:
+      SERVER_NAME: kp45-es
+      ELASTICSEARCH_HOSTS: http://kp45-es:9200
+    ports:
+      - 5601:5601
+    networks:
+      - docker-kp45
+    depends_on:
+      - kp45-es
+networks:
+  docker-kp45:
+    driver: bridge

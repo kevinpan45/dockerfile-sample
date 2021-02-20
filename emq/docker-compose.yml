@@ -1,0 +1,17 @@
+version: "3"
+services: 
+  emqx-broker:
+    image: emqx/emqx:latest
+    restart: always
+    ports:
+      - 1883:1883
+      - 8083:8083
+      - 8883:8883
+      - 8084:8084
+      - 18083:18083
+    network_mode: host
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
+    network_mode: host

@@ -1,5 +1,7 @@
 package io.kp45.hello;
 
+import java.net.Inet4Address;
+import java.net.UnknownHostException;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,5 +37,10 @@ public class HelloApi {
         helloService.say(msg);
         redisTemplate.opsForSet().add(CACHE_KEY, msg);
         return "Hello msg send.";
+    }
+
+    @GetMapping("/hello/host")
+    public String getHost() throws UnknownHostException {
+        return Inet4Address.getLocalHost().getHostAddress();
     }
 }
