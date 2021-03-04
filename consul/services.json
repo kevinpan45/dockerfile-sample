@@ -1,0 +1,23 @@
+{
+    "services": [
+        {
+            "id": "kp45-ued-2",
+            "name": "kp45-ued-2",
+            "tags": [
+                "primary"
+            ],
+            "address": "10.20.178.229",
+            "port": 8500,
+            "checks": [
+                {
+                    "name": "NGINX server started",
+                    "http": "http://localhost:80",
+                    "tls_skip_verify": false,
+                    "method": "GET",
+                    "interval": "10s",
+                    "timeout": "1s"
+                }
+            ]
+        }
+    ]
+}

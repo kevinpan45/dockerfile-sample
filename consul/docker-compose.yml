@@ -1,0 +1,17 @@
+version: "3"
+services:
+  nginx-consul:
+    command:
+      - agent
+      - --server=false
+      - --join
+      - 10.20.178.229
+    environment:
+      CONSUL_BIND_INTERFACE: eth0
+    user: root
+    ports: 
+      - 7890:80
+    image: nginx-consul:latest
+    volumes:
+      - ./services.json:/consul/config/local.json
+    restart: always
