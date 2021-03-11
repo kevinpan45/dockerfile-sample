@@ -1,0 +1,12 @@
+# Build spring boot microservice by maven
+FROM maven:3.6.1 AS maven_build
+COPY settings-docker.xml /usr/share/maven/ref/settings.xml
+ENV WORK_DIR=/tmp/hello/
+COPY ./* ${WORK_DIR}
+RUN cd ${WORK_DIR} && mvn clean package -DskipTests --settings /usr/share/maven/ref/settings.xml
+
+# Build docker image
+FROM openjdk:8-jdk-alpine
+COPY --from=maven_build /tmp/hello/target/*.jar app.jar
+EXPOSE 80
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
