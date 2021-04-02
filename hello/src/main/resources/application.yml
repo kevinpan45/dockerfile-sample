@@ -38,7 +38,7 @@ mybatis-plus:
     map-underscore-to-camel-case: true
 logging:
   level:
-    com.dbappsecurity: info
+    io.kp45: info
   file: /tmp/app.log
   file.max-size: 50MB
   file.max-history: 10
