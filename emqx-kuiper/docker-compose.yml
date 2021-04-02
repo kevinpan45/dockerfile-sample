@@ -1,0 +1,13 @@
+version: "3"
+services: 
+  emqx-kuiper:
+    image: emqx/kuiper:1.1.2-slim
+    restart: always
+    environment: 
+        - 'MQTT_SOURCE__DEFAULT__SERVERS=[tcp://broker.emqx.io:1883]'
+    network_mode: host
+  emqx-kuiper-manager:
+    image: emqx/kuiper-manager:1.1.1
+    ports:
+      - 9082:9082
+    network_mode: host
